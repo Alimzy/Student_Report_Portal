@@ -9,7 +9,7 @@ on:
   workflow_dispatch: {}
 
 env:
-  AWS_REGION: eu-north-1
+  AWS_REGION: us-east-1
   ECR_REPOSITORY: result-portal
 
 jobs:
