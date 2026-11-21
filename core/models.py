@@ -1,27 +1,28 @@
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.models import PermissionsMixin
 from django.db import models
-from core.constants import ROLE_CHOICES, ROLE_ADMIN
+
+from core.constants import ROLE_ADMIN, ROLE_CHOICES
 
 
 class UserManager(BaseUserManager):
-    def get_by_natural_key(self,email):
+    def get_by_natural_key(self, email):
         return self.get(email=email)
 
-    def create_user(self,email,username,password,**extra_fields):
+    def create_user(self, email, username, password, **extra_fields):
         if not email:
             raise ValueError("Users must have an email address")
         email = self.normalize_email(email)
-        user = self.model(email=email,username=username,**extra_fields)
+        user = self.model(email=email, username=username, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
         return user
 
-    def create_superuser(self,email,username,password = None,**extra_fields):
-        extra_fields.setdefault("is_staff",True)
-        extra_fields.setdefault("is_active",True)
-        extra_fields.setdefault("role",ROLE_ADMIN)
-        return self.create_user(email,username,password,**extra_fields)
+    def create_superuser(self, email, username, password=None, **extra_fields):
+        extra_fields.setdefault("is_staff", True)
+        extra_fields.setdefault("is_active", True)
+        extra_fields.setdefault("role", ROLE_ADMIN)
+        return self.create_user(email, username, password, **extra_fields)
 
 
 class User(AbstractBaseUser, PermissionsMixin):
@@ -55,14 +56,13 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 class Department(models.Model):
     name = models.CharField(max_length=200, unique=True, blank=False, null=False)
-    department_code = models.CharField(max_length=20, unique=True, blank=False, null=False, primary_key=True)
+    department_code = models.CharField(
+        max_length=20, unique=True, blank=False, null=False, primary_key=True
+    )
     description = models.TextField(blank=True, null=False)
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
-
-
 
     class Meta:
         db_table = "core_departments"
@@ -70,4 +70,3 @@ class Department(models.Model):
 
     def __str__(self):
         return f"{self.department_code} - {self.name}"
-

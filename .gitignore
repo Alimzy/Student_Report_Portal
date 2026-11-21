@@ -1,10 +1,71 @@
-# Python-generated files
+# ---------------------------------------------------------------------------
+# Secrets and local environment
+# ---------------------------------------------------------------------------
+.env
+.env.*
+!.env.example
+
+# ---------------------------------------------------------------------------
+# Python
+# ---------------------------------------------------------------------------
 __pycache__/
-*.py[oc]
+*.py[cod]
+*$py.class
 build/
 dist/
 wheels/
-*.egg-info
+*.egg-info/
+.venv/
+venv/
+.python-version.bak
 
-# Virtual environments
-.venv
+# ---------------------------------------------------------------------------
+# Django
+# ---------------------------------------------------------------------------
+db.sqlite3
+db.sqlite3-journal
+*.sqlite3
+*.sqlite3-journal
+staticfiles/
+media/
+*.log
+
+# ---------------------------------------------------------------------------
+# Tests / coverage / tooling
+# ---------------------------------------------------------------------------
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+.tox/
+.pre-commit-cache/
+
+# ---------------------------------------------------------------------------
+# IDE / OS
+# ---------------------------------------------------------------------------
+.idea/
+.vscode/
+*.swp
+.DS_Store
+Thumbs.db
+
+# ---------------------------------------------------------------------------
+# Frontend (Batch 4+)
+# ---------------------------------------------------------------------------
+node_modules/
+frontend/dist/
+frontend/.vite/
+playwright-report/
+test-results/
+
+# ---------------------------------------------------------------------------
+# Design reference assets are kept locally only (not licensed for
+# redistribution). Generated brand assets under design/brand/ ARE tracked.
+# ---------------------------------------------------------------------------
+design/*.png
+design/*.jpeg
+design/*.jpg
+design/*.webp

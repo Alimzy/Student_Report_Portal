@@ -1,15 +1,17 @@
-from django.db import models
-from django.core.validators import MaxValueValidator, MinValueValidator
 from django.core.exceptions import ValidationError
+from django.core.validators import MaxValueValidator, MinValueValidator
+from django.db import models
 
 from account.models import Student
+from core.constants import LEVEL_CHOICES, SEMESTER_CHOICES
 from core.models import Department
-from core.constants import SEMESTER_CHOICES, LEVEL_CHOICES
 
 
 class AcademicSession(models.Model):
     name = models.CharField(max_length=20, help_text="e.g 2024/2025")
-    year = models.PositiveIntegerField(validators=[MaxValueValidator(2100), MinValueValidator(2000)])
+    year = models.PositiveIntegerField(
+        validators=[MaxValueValidator(2100), MinValueValidator(2000)]
+    )
     semester = models.CharField(max_length=10, choices=SEMESTER_CHOICES, default="first")
     is_current = models.BooleanField(default=False)
     start_date = models.DateField(null=True, blank=True)
@@ -27,9 +29,13 @@ class AcademicSession(models.Model):
 
 class Course(models.Model):
     department = models.ForeignKey(Department, on_delete=models.PROTECT, related_name="courses")
-    course_code = models.CharField(max_length=20, unique=True, blank=False, null=False, primary_key=True)
+    course_code = models.CharField(
+        max_length=20, unique=True, blank=False, null=False, primary_key=True
+    )
     title = models.CharField(max_length=200)
-    credit_units = models.PositiveSmallIntegerField(validators=[MinValueValidator(1), MaxValueValidator(6)])
+    credit_units = models.PositiveSmallIntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(6)]
+    )
     level = models.CharField(max_length=3, choices=LEVEL_CHOICES, default="100")
     semester = models.CharField(max_length=10, choices=SEMESTER_CHOICES, default="first")
     description = models.TextField(blank=True)
@@ -46,8 +52,12 @@ class Course(models.Model):
 
 
 class CourseRegistration(models.Model):
-    student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name="student_registrations")
-    course = models.ForeignKey(Course, on_delete=models.PROTECT, related_name="course_registrations")
+    student = models.ForeignKey(
+        Student, on_delete=models.CASCADE, related_name="student_registrations"
+    )
+    course = models.ForeignKey(
+        Course, on_delete=models.PROTECT, related_name="course_registrations"
+    )
     session = models.ForeignKey(AcademicSession, on_delete=models.PROTECT, related_name="sessions")
     register_at = models.DateTimeField(auto_now_add=True)
 

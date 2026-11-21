@@ -1,7 +1,9 @@
 from rest_framework import serializers
+
 from account.models import Student
 from account.serializer import StudentEnrollmentSerializer
-from .models import Course, AcademicSession, CourseRegistration
+
+from .models import AcademicSession, Course, CourseRegistration
 
 
 class CourseSerializer(serializers.ModelSerializer):
@@ -26,26 +28,29 @@ class CourseRegistrationSerializer(serializers.ModelSerializer):
     session = AcademicSessionSerializer(read_only=True)
 
     student_id = serializers.PrimaryKeyRelatedField(
-        queryset=Student.objects.all(),
-        source='student',
-        write_only=True
+        queryset=Student.objects.all(), source='student', write_only=True
     )
 
     course_id = serializers.PrimaryKeyRelatedField(
-        queryset=Course.objects.all(),
-        source='course',
-        write_only=True
+        queryset=Course.objects.all(), source='course', write_only=True
     )
 
     session_id = serializers.PrimaryKeyRelatedField(
-        queryset=AcademicSession.objects.all(),
-        source='session',
-        write_only=True
+        queryset=AcademicSession.objects.all(), source='session', write_only=True
     )
 
     class Meta:
         model = CourseRegistration
-        fields = ["id", "student", "course", "session", "student_id", "course_id", "session_id", "register_at"]
+        fields = [
+            "id",
+            "student",
+            "course",
+            "session",
+            "student_id",
+            "course_id",
+            "session_id",
+            "register_at",
+        ]
         read_only_fields = ["register_at"]
 
     def validate(self, attrs):
@@ -53,11 +58,7 @@ class CourseRegistrationSerializer(serializers.ModelSerializer):
         course = attrs.get('course')
         session = attrs.get('session')
 
-        exists = CourseRegistration.objects.filter(
-            student=student,
-            course=course,
-            session=session
-        )
+        exists = CourseRegistration.objects.filter(student=student, course=course, session=session)
 
         if self.instance:
             exists = exists.exclude(pk=self.instance.pk)
@@ -67,8 +68,7 @@ class CourseRegistrationSerializer(serializers.ModelSerializer):
 
         if course.semester != session.semester:
             raise serializers.ValidationError(
-                f"{course.course_code} belongs "
-                f"to {course.semester} semester"
+                f"{course.course_code} belongs to {course.semester} semester"
             )
 
         return attrs
